@@ -22,6 +22,9 @@
 *.a
 *.lib
 
+# doc stuff
+doc/
+
 # Executables
 *.exe
 *.out
