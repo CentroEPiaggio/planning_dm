@@ -1,0 +1,4 @@
+[Project]
+Name=gml2lgf
+Manager=KDevCMakeManager
+VersionControl=kdevgit
