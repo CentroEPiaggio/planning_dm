@@ -4,7 +4,10 @@
 #include <lemon/smart_graph.h>
 #include <lemon/path.h>
 #include <vector>
+#include <map>
 #include <lemon/random.h>
+#include <dual_manipulation_shared/grasp.h>
+#include <dual_manipulation_shared/object.h>
 
 #define XYOFFSET 80
 #define VERTICAL_LENGTH 100000
@@ -21,6 +24,9 @@ class graphCreator
     const std::string left_workspace="left_workspace";
     const std::string right_workspace="right_workspace";
     const std::string shared_workspace="shared_workspace";
+public:
+    std::map<Object,std::vector<Grasp>> grasps;//TODO make private
+    std::map<Object,std::map<Grasp,Grasp>> transition_grasps;
     
 };
 
