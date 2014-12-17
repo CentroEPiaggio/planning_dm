@@ -1,22 +1,138 @@
 #include "graph_creator.h"
 
-#include <lemon/lgf_reader.h>
-#include <lemon/lgf_writer.h>
 #include <lemon/dijkstra.h>
 #include <lemon/concepts/maps.h>
-#include <sstream>
-#include <iomanip>
-#include <boost/algorithm/string.hpp>
-
 #include<lemon/graph_to_eps.h>
 #include <lemon/color.cc>
-
-#define sqr(a) (a)*(a)
-#define MAX_ARC_FLOORS 4
+#include <dual_manipulation_shared/object.h>
 
 using namespace std;
 
-int Graph_creator::createGraph ( int floors, string graphName )
+graphCreator::graphCreator():grasps_ids(graph),grasps_positions(graph),coords(graph)
+{
+
+}
+
+
+void graphCreator::create_fake_map()
+{
+    Grasp temp;
+    temp.name="test";
+    grasps[0]=temp;
+    temp.name="test1";
+    grasps[1]=temp;
+    temp.name="test2";
+    grasps[2]=temp;
+    transition_grasps[0].push_back(1);
+    transition_grasps[1].push_back(2);
+    transition_grasps[1].push_back(2);
+    transition_grasps[2].push_back(0);
+    transition_grasps[2].push_back(1);
+}
+
+bool graphCreator::create_graph(Object obj)
+{
+    using namespace lemon;
+    
+    //Ask to Grasp_DB the list of objects
+    //Check if obj is in the list
+    //Ask to Grasp_DB the grasps for obj
+    //Ask to Grasp_DB the transitions grasps for obj/grasp
+    //Fill internal maps with database data
+    create_fake_map();
+    
+    //Create nodes in each workspace for each grasp
+    for ( unsigned int i=0; i<grasps.size(); i++ )
+    {
+        for (int j=0;j<WORKSPACES;j++)
+        {
+            SmartDigraph::Node n = graph.addNode();
+            grasps_ids[n] = i;
+            grasps_positions[n] = j;
+            coords[n].x=j*100+i*10;
+            coords[n].y=i*20;
+        }
+    }
+
+    //For each node in the graph with id ID, connect with all the nodes with ID in the map transition_grasps and adjacent workspace
+    for (SmartDigraph::NodeIt n(graph); n!=INVALID; ++n) 
+    {
+        for (auto final_grasp: transition_grasps[grasps_ids[n]])
+        {
+            for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) 
+            {
+                if ((grasps_ids[ntarget]==final_grasp) && (grasps_positions[ntarget]-grasps_positions[n]==1))
+                {
+                    SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                }
+            }
+        }
+    }
+    
+    lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
+    coords ( coords ).
+//    nodeColors ( composeMap ( p,ncolors ) ).
+//    arcColors ( composeMap ( p,acolors ) ).
+    nodeTexts ( grasps_ids ).
+    nodeTextSize ( 4 ).
+    nodeScale ( 0.008 ).
+    arcWidthScale ( 0.0008 ).
+    drawArrows ( true ).
+    arrowWidth ( 3 ).
+    arrowLength ( 5 ).
+    enableParallel ( true ).
+    distantColorNodeTexts().
+    run();
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*int Graph_creator::createGraph ( int floors, string graphName )
 {
     this->floors=floors;
     try
@@ -171,3 +287,4 @@ bool Graph_creator::parseGraph ( string graphName )
     std::cout << "Number of arcs: " << lemon::countArcs ( _3Dgraph ) << std::endl;
     return true;
 }
+*/

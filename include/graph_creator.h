@@ -9,25 +9,46 @@
 #include <dual_manipulation_shared/grasp.h>
 #include <dual_manipulation_shared/object.h>
 
-#define XYOFFSET 80
-#define VERTICAL_LENGTH 100000
-#define TOP_FLOOR_LENGTH 500
+#define WORKSPACES 3
 
-#define MAXFLOORS 8
-#define FLOORS_SENT 6
-#define MAX_LENGTH 2*VERTICAL_LENGTH //TODO
-
-
-
+/**
+ * @brief The class used to handle the generation of a graph for the planner
+ * 
+ */
 class graphCreator
 {
+    const std::vector<std::string> workspaces = {"left_workspace","right_workspace","shared_workspace"};
     const std::string left_workspace="left_workspace";
     const std::string right_workspace="right_workspace";
     const std::string shared_workspace="shared_workspace";
 public:
-    std::map<Object,std::vector<Grasp>> grasps;//TODO make private
-    std::map<Object,std::map<Grasp,Grasp>> transition_grasps;
+    std::map<int,Grasp> grasps;//TODO make private
+    std::map<int,std::vector<int>> transition_grasps; //TODO make private
+
+    graphCreator();
+
+    /**
+     * @brief Creates a graph of all the possible interactions between an object \param obj and the grasps
+     * 
+     * @param obj the object used in this graph
+     * @return true on success, false otherwise
+     */
+    bool create_graph(Object obj);
     
+    void create_fake_map();
+
+private:
+    lemon::SmartDigraph graph;
+    unsigned int graph_node_size;
+
+    //lemon::SmartDigraph::ArcMap<int> length; //Future arcs lengths
+
+    lemon::SmartDigraph::NodeMap<int> grasps_ids;
+    lemon::SmartDigraph::NodeMap<int> grasps_positions;
+    lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
+
+    //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
+
 };
 
 
@@ -37,7 +58,7 @@ public:
 
 
 
-
+/*
 
 class Graph_creator
 {
@@ -66,5 +87,5 @@ private:
 	void addNodes(lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int> >& coords,
 				  lemon::SmartDigraph::NodeMap<int>& ncolors,lemon::SmartDigraph::ArcMap<int>& acolors,unsigned int floorNumber);
 };
-
+*/
 #endif // GRAPH_CREATOR_H
