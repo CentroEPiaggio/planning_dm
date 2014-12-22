@@ -38,7 +38,7 @@ public:
     void create_fake_map();
 
 private:
-    lemon::SmartDigraph graph;
+    lemon::SmartDigraph& graph;
     unsigned int graph_node_size;
 
     //lemon::SmartDigraph::ArcMap<int> length; //Future arcs lengths

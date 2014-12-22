@@ -8,7 +8,8 @@
 
 using namespace std;
 
-graphCreator::graphCreator():grasps_ids(graph),grasps_positions(graph),coords(graph)
+graphCreator::graphCreator(    lemon::SmartDigraph& graph
+):graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph)
 {
 
 }
@@ -24,9 +25,9 @@ void graphCreator::create_fake_map()
     temp.name="test2";
     grasps[2]=temp;
     transition_grasps[0].push_back(1);
-    transition_grasps[1].push_back(2);
-    transition_grasps[1].push_back(2);
-    transition_grasps[2].push_back(0);
+//     transition_grasps[0].push_back(2);
+//     transition_grasps[1].push_back(2);
+//     transition_grasps[2].push_back(0);
     transition_grasps[2].push_back(1);
 }
 
@@ -57,14 +58,16 @@ bool graphCreator::create_graph(Object obj)
     //For each node in the graph with id ID, connect with all the nodes with ID in the map transition_grasps and adjacent workspace
     for (SmartDigraph::NodeIt n(graph); n!=INVALID; ++n) 
     {
-        for (auto final_grasp: transition_grasps[grasps_ids[n]])
+        for (auto target_grasp: transition_grasps[grasps_ids[n]])
         {
             for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) 
             {
-                if ((grasps_ids[ntarget]==final_grasp) && (grasps_positions[ntarget]-grasps_positions[n]==1))
+                if ((grasps_ids[ntarget]==target_grasp) && (abs(grasps_positions[ntarget]-grasps_positions[n])<=1))
                 {
                     SmartDigraph::Arc a=graph.addArc ( n,ntarget );
                 }
+                if (grasps_ids[n]==grasps_ids[ntarget] && (abs(grasps_positions[ntarget]-grasps_positions[n])<=1))
+                    SmartDigraph::Arc a=graph.addArc ( n,ntarget );
             }
         }
     }
@@ -80,7 +83,8 @@ bool graphCreator::create_graph(Object obj)
     drawArrows ( true ).
     arrowWidth ( 3 ).
     arrowLength ( 5 ).
-    enableParallel ( true ).
+//     enableParallel ( true ).
+    enableParallel().parArcDist(1.5).
     distantColorNodeTexts().
     run();
     
