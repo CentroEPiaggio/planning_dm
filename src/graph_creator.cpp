@@ -2,10 +2,10 @@
 
 #include <lemon/dijkstra.h>
 #include <lemon/concepts/maps.h>
-#include<lemon/graph_to_eps.h>
+#include <lemon/graph_to_eps.h>
 #include <lemon/color.cc>
 #include <dual_manipulation_shared/object.h>
-
+#include <dual_manipulation_shared/databasemapper.h>
 using namespace std;
 using namespace dual_manipulation::planner;
 
@@ -13,7 +13,7 @@ using namespace dual_manipulation::planner;
 graphCreator::graphCreator(    lemon::SmartDigraph& graph
 ):graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph)
 {
-
+databaseMapper test;
 }
 
 
