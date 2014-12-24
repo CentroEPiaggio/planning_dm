@@ -11,6 +11,10 @@
 
 #define WORKSPACES 3
 
+namespace dual_manipulation
+{
+    namespace planner
+{
 /**
  * @brief The class used to handle the generation of a graph for the planner
  * 
@@ -25,7 +29,7 @@ public:
     std::map<int,Grasp> grasps;//TODO make private
     std::map<int,std::vector<int>> transition_grasps; //TODO make private
 
-    graphCreator();
+    graphCreator(lemon::SmartDigraph& graph);
 
     /**
      * @brief Creates a graph of all the possible interactions between an object \param obj and the grasps
@@ -53,7 +57,8 @@ private:
 
 
 
-
+}
+}
 
 
 

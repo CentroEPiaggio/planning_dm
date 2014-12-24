@@ -31,7 +31,7 @@ add_subdirectory(src/lemon-1.3.1)
 
 add_subdirectory(src/gml2lgf)
 
-add_executable(dual_manipulation_planner src/graph_creator.cpp src/main.cpp)
+add_executable(dual_manipulation_planner src/graph_creator.cpp src/ros_server.cpp src/main.cpp)
 target_link_libraries(dual_manipulation_planner ${catkin_LIBRARIES} lemon)
 # ${CMAKE_BINARY_DIR}/lemon-1.3.1/lemon/liblemon.a)
 

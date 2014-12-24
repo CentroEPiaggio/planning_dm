@@ -7,6 +7,8 @@
 #include <dual_manipulation_shared/object.h>
 
 using namespace std;
+using namespace dual_manipulation::planner;
+
 
 graphCreator::graphCreator(    lemon::SmartDigraph& graph
 ):graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph)
