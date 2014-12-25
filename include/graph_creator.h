@@ -8,6 +8,7 @@
 #include <lemon/random.h>
 #include <dual_manipulation_shared/grasp.h>
 #include <dual_manipulation_shared/object.h>
+#include <dual_manipulation_shared/databasemapper.h>
 
 #define WORKSPACES 3
 
@@ -26,9 +27,6 @@ class graphCreator
     const std::string right_workspace="right_workspace";
     const std::string shared_workspace="shared_workspace";
 public:
-    std::map<int,Grasp> grasps;//TODO make private
-    std::map<int,std::vector<int>> transition_grasps; //TODO make private
-
     graphCreator(lemon::SmartDigraph& graph);
 
     /**
@@ -44,7 +42,8 @@ public:
 private:
     lemon::SmartDigraph& graph;
     unsigned int graph_node_size;
-
+    databaseMapper database;
+    
     //lemon::SmartDigraph::ArcMap<int> length; //Future arcs lengths
 
     lemon::SmartDigraph::NodeMap<int> grasps_ids;
@@ -54,43 +53,7 @@ private:
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
 
 };
-
-
-
 }
 }
 
-
-
-
-/*
-
-class Graph_creator
-{
-public:	
-	Graph_creator(lemon::SmartDigraph &graph,lemon::SmartDigraph::ArcMap<int> &length,
-    lemon::SmartDigraph::NodeMap<int> &coord_x,lemon::SmartDigraph::NodeMap<int> &coord_y);
-	int createGraph(int floors, std::string graphName);
-private:
-	unsigned int graph_node_size;
-	unsigned int floors;
-	lemon::SmartDigraph graph;
-	lemon::SmartDigraph &_3Dgraph;
-	lemon::SmartDigraph::ArcMap<int> &_3Dlength;
-    lemon::SmartDigraph::NodeMap<int> &_3Dcoord_x, &_3Dcoord_y;
- 
-    lemon::SmartDigraph::ArcMap<int> length;
-    lemon::SmartDigraph::NodeMap<int> coord_x, coord_y;
-	
-	bool parseGraph(std::string graphName);
-	void addFloor(lemon::SmartDigraph::NodeMap< lemon::dim2::Point< int > >& coords,
-					lemon::SmartDigraph::NodeMap< int >& ncolors, lemon::SmartDigraph::ArcMap< int >& acolors,
-					int startId);
-	void finalizeFloor(lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int> >& coords,
-	lemon::SmartDigraph::NodeMap<int>& ncolors,
-	lemon::SmartDigraph::ArcMap<int>& acolors,int startId);
-	void addNodes(lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int> >& coords,
-				  lemon::SmartDigraph::NodeMap<int>& ncolors,lemon::SmartDigraph::ArcMap<int>& acolors,unsigned int floorNumber);
-};
-*/
-#endif // GRAPH_CREATOR_H
+#endif

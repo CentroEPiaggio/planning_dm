@@ -13,13 +13,12 @@ using namespace dual_manipulation::planner;
 graphCreator::graphCreator(    lemon::SmartDigraph& graph
 ):graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph)
 {
-databaseMapper test;
 }
 
 
 void graphCreator::create_fake_map()
 {
-    Grasp temp;
+/*    Grasp temp;
     temp.name="test";
     grasps[0]=temp;
     temp.name="test1";
@@ -30,7 +29,7 @@ void graphCreator::create_fake_map()
 //     transition_grasps[0].push_back(2);
 //     transition_grasps[1].push_back(2);
 //     transition_grasps[2].push_back(0);
-    transition_grasps[2].push_back(1);
+    transition_grasps[2].push_back(1);*/
 }
 
 bool graphCreator::create_graph(Object obj)
@@ -39,28 +38,35 @@ bool graphCreator::create_graph(Object obj)
     
     //Ask to Grasp_DB the list of objects
     //Check if obj is in the list
+    if (!database.Objects.count(obj.id))
+        return false;
     //Ask to Grasp_DB the grasps for obj
     //Ask to Grasp_DB the transitions grasps for obj/grasp
     //Fill internal maps with database data
-    create_fake_map();
-    
+
     //Create nodes in each workspace for each grasp
-    for ( unsigned int i=0; i<grasps.size(); i++ )
+    for ( auto grasp:database.Grasps )
     {
-        for (int j=0;j<WORKSPACES;j++)
+        if (std::get<0>(grasp.second)!=obj.id) continue;
+        for (auto workspace:database.Workspaces)
         {
-            SmartDigraph::Node n = graph.addNode();
-            grasps_ids[n] = i;
-            grasps_positions[n] = j;
-            coords[n].x=j*100+i*10;
-            coords[n].y=i*20;
+            endeffector_id eeId= std::get<1>(grasp.second);
+            //if ee associated to grasp is reachable in the workspace
+            if(database.Reachability[eeId].count(workspace.first))
+            {
+                SmartDigraph::Node n = graph.addNode();
+                grasps_ids[n] = grasp.first;
+                grasps_positions[n] = workspace.first;
+                coords[n].x=workspace.first*100+grasp.first*10;
+                coords[n].y=grasp.first*20;
+            }
         }
     }
-
+/*
     //For each node in the graph with id ID, connect with all the nodes with ID in the map transition_grasps and adjacent workspace
     for (SmartDigraph::NodeIt n(graph); n!=INVALID; ++n) 
     {
-        for (auto target_grasp: transition_grasps[grasps_ids[n]])
+        for (auto target_grasp: database.Grasp_transitions[grasps_ids[n]])
         {
             for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) 
             {
@@ -73,7 +79,7 @@ bool graphCreator::create_graph(Object obj)
             }
         }
     }
-    
+  */  
     lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
     coords ( coords ).
 //    nodeColors ( composeMap ( p,ncolors ) ).
@@ -89,7 +95,7 @@ bool graphCreator::create_graph(Object obj)
     enableParallel().parArcDist(1.5).
     distantColorNodeTexts().
     run();
-    
+   
 }
 
 

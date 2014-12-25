@@ -6,7 +6,7 @@ using namespace dual_manipulation::planner;
 
 ros_server::ros_server():graph_creator(graph)
 {
-    Object a;
+    Object a; a.id=1;
     graph_creator.create_graph(a);
     service = node.advertiseService("planner_ros_service", &ros_server::planner_ros_service, this);
 }
