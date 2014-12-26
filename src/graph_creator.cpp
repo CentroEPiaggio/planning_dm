@@ -58,28 +58,32 @@ bool graphCreator::create_graph(Object obj)
                 grasps_ids[n] = grasp.first;
                 grasps_positions[n] = workspace.first;
                 coords[n].x=workspace.first*100+grasp.first*10;
-                coords[n].y=grasp.first*20;
+                coords[n].y=eeId*30-grasp.first*5;
             }
         }
     }
-/*
+
     //For each node in the graph with id ID, connect with all the nodes with ID in the map transition_grasps and adjacent workspace
-    for (SmartDigraph::NodeIt n(graph); n!=INVALID; ++n) 
+    for (SmartDigraph::NodeIt n(graph); n!=INVALID; ++n) //for all the sources
     {
-        for (auto target_grasp: database.Grasp_transitions[grasps_ids[n]])
+        for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) //for all the targets
         {
-            for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) 
+            if (grasps_ids[n]==grasps_ids[ntarget] && 
+                std::get<1>(database.EndEffectors[std::get<1>(database.Grasps[grasps_ids[n]])]) &&
+                database.WorkspacesAdjacency[grasps_positions[n]].count(grasps_positions[ntarget]))
             {
-                if ((grasps_ids[ntarget]==target_grasp) && (abs(grasps_positions[ntarget]-grasps_positions[n])<=1))
-                {
-                    SmartDigraph::Arc a=graph.addArc ( n,ntarget );
-                }
-                if (grasps_ids[n]==grasps_ids[ntarget] && (abs(grasps_positions[ntarget]-grasps_positions[n])<=1))
-                    SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                a=graph.addArc ( ntarget,n );
+            }
+            else
+            if (grasps_positions[n]==grasps_positions[ntarget] && database.Grasp_transitions[grasps_ids[n]].count(grasps_ids[ntarget])) 
+            {
+                SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                a=graph.addArc ( ntarget,n );
             }
         }
     }
-  */  
+    
     lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
     coords ( coords ).
 //    nodeColors ( composeMap ( p,ncolors ) ).
