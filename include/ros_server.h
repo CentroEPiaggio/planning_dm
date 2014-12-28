@@ -38,7 +38,7 @@ private:
     
     lemon::SmartDigraph graph;
     graphCreator graph_creator;
-    
+    Object obj;
 };
 
 }

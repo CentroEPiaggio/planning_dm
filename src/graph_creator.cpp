@@ -10,8 +10,8 @@ using namespace std;
 using namespace dual_manipulation::planner;
 
 
-graphCreator::graphCreator(    lemon::SmartDigraph& graph
-):graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph)
+graphCreator::graphCreator(lemon::SmartDigraph& graph)
+:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph)
 {
 }
 
@@ -32,10 +32,18 @@ void graphCreator::create_fake_map()
     transition_grasps[2].push_back(1);*/
 }
 
+bool graphCreator::getNode(grasp_id graspId, workspace_id workspaceId, lemon::SmartDigraphBase::Node& node)
+{
+    if (!nodeIds.count(graspId) || !nodeIds[graspId].count(workspaceId)) return false;
+    node = graph.nodeFromId(nodeIds[graspId][workspaceId]);
+    return true;
+}
+
+
 bool graphCreator::create_graph(Object obj)
 {
     using namespace lemon;
-    
+    graph.clear();
     //Ask to Grasp_DB the list of objects
     //Check if obj is in the list
     if (!database.Objects.count(obj.id))
@@ -59,6 +67,7 @@ bool graphCreator::create_graph(Object obj)
                 grasps_positions[n] = workspace.first;
                 coords[n].x=workspace.first*100+grasp.first*10;
                 coords[n].y=eeId*30-grasp.first*5;
+                nodeIds[grasp.first][workspace.first]=graph.id(n);
             }
         }
     }
@@ -74,12 +83,14 @@ bool graphCreator::create_graph(Object obj)
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
                 a=graph.addArc ( ntarget,n );
+                length[a]=1;
             }
             else
             if (grasps_positions[n]==grasps_positions[ntarget] && database.Grasp_transitions[grasps_ids[n]].count(grasps_ids[ntarget])) 
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
                 a=graph.addArc ( ntarget,n );
+                length[a]=2;
             }
         }
     }

@@ -10,8 +10,6 @@
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
 
-#define WORKSPACES 3
-
 namespace dual_manipulation
 {
     namespace planner
@@ -37,19 +35,21 @@ public:
      */
     bool create_graph(Object obj);
     
+    bool getNode(grasp_id graspId, workspace_id workspaceId,lemon::SmartDigraph::Node& node);
+    
     void create_fake_map();
-
+    lemon::SmartDigraph::ArcMap<int> length; //TODO make private
+    lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
+    lemon::SmartDigraph::NodeMap<int> grasps_positions;//TODO make private
+    
 private:
     lemon::SmartDigraph& graph;
     unsigned int graph_node_size;
     databaseMapper database;
     
-    //lemon::SmartDigraph::ArcMap<int> length; //Future arcs lengths
-
-    lemon::SmartDigraph::NodeMap<int> grasps_ids;
-    lemon::SmartDigraph::NodeMap<int> grasps_positions;
     lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
 
+    std::map<workspace_id,std::map<grasp_id,int>> nodeIds;
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
 
 };
