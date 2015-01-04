@@ -78,7 +78,7 @@ bool graphCreator::create_graph(Object obj)
         for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) //for all the targets
         {
             if (grasps_ids[n]==grasps_ids[ntarget] && 
-                std::get<1>(database.EndEffectors[std::get<1>(database.Grasps[grasps_ids[n]])]) &&
+                std::get<1>(database.EndEffectors[std::get<1>(database.Grasps[grasps_ids[n]])]) && //E.E is movable
                 database.WorkspacesAdjacency[grasps_positions[n]].count(grasps_positions[ntarget]))
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
