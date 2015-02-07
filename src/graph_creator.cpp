@@ -3,7 +3,6 @@
 #include <lemon/dijkstra.h>
 #include <lemon/concepts/maps.h>
 #include <lemon/graph_to_eps.h>
-#include <lemon/color.cc>
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
 using namespace std;
