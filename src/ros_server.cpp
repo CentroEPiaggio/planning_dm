@@ -25,7 +25,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
     }
     else if (req.command=="plan" || req.command=="Plan")
     {
-        std::cout<<"planning from "<<req.source.grasp_id<<" in workspace "<<req.source.workspace_id<<" to "<<req.destination.grasp_id<<" in workspace "<<req.source.workspace_id<<std::endl;
+        std::cout<<"planning from "<<req.source.grasp_id<<" in workspace "<<req.source.workspace_id<<" to "<<req.destination.grasp_id<<" in workspace "<<req.destination.workspace_id<<std::endl;
         lemon::SmartDigraph::Node source, target;
         if (!graph_creator.getNode(req.source.grasp_id,req.source.workspace_id,source))
         {
