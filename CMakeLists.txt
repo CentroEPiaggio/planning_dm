@@ -28,7 +28,7 @@ add_subdirectory(src/gml2lgf)
 
 add_executable(dual_manipulation_planner src/graph_creator.cpp src/ros_server.cpp src/main.cpp)
 target_link_libraries(dual_manipulation_planner ${catkin_LIBRARIES} lemon)
-add_dependencies(dual_manipulation_planner dual_manipulation_shared_gencpp)
+# add_dependencies(dual_manipulation_planner dual_manipulation_shared_gencpp)
 
 install(TARGETS dual_manipulation_planner RUNTIME DESTINATION bin)
 
@@ -36,4 +36,4 @@ add_executable(test_planning test/test_planning.cpp)
 
 target_link_libraries(test_planning ${catkin_LIBRARIES})
 
-add_dependencies(test_planning dual_manipulation_shared_gencpp)
+# add_dependencies(test_planning dual_manipulation_shared_gencpp)
