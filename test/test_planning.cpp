@@ -31,9 +31,9 @@ int main(int argc, char **argv)
     }
     
     srv.request.command="plan";
-    srv.request.source.grasp_id=5;
+    srv.request.source.grasp_id=15;
     srv.request.source.workspace_id=3;
-    srv.request.destination.grasp_id=3;
+    srv.request.destination.grasp_id=14;
     srv.request.destination.workspace_id=1;
     
     if (client.call(srv))
