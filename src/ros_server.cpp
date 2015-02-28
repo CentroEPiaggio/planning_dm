@@ -9,7 +9,13 @@
 
 using namespace dual_manipulation::planner;
 
+
 ros_server::ros_server():graph_creator(graph)
+{
+    service = node.advertiseService("planner_ros_service", &ros_server::planner_ros_service, this);
+}
+
+ros_server::ros_server(int x,int offx,int y,int offy):graph_creator(graph,x,offx,y,offy)
 {
     service = node.advertiseService("planner_ros_service", &ros_server::planner_ros_service, this);
 }
@@ -55,5 +61,5 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
 
 ros_server::~ros_server()
 {
-
+    service.shutdown();
 }

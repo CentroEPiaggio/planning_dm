@@ -26,7 +26,7 @@ class graphCreator
     const std::string shared_workspace="shared_workspace";
 public:
     graphCreator(lemon::SmartDigraph& graph);
-
+    graphCreator(lemon::SmartDigraph& graph,int x,int offx,int y,int offy);
     /**
      * @brief Creates a graph of all the possible interactions between an object \param obj and the grasps
      * 
@@ -41,6 +41,8 @@ public:
     lemon::SmartDigraph::ArcMap<int> length; //TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_positions;//TODO make private
+    lemon::SmartDigraph::NodeMap<int> ncolors;
+    lemon::SmartDigraph::NodeMap<int> nshapes;
     
 private:
     lemon::SmartDigraph& graph;
@@ -48,7 +50,7 @@ private:
     databaseMapper database;
     
     lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
-
+    int x;int offx;int y;int offy;
     std::map<workspace_id,std::map<grasp_id,int>> nodeIds;
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
 

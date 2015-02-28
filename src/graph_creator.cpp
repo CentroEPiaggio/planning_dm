@@ -9,8 +9,12 @@ using namespace std;
 using namespace dual_manipulation::planner;
 
 
-graphCreator::graphCreator(lemon::SmartDigraph& graph)
-:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph)
+graphCreator::graphCreator(lemon::SmartDigraph& graph, int x, int offx, int y, int offy)
+:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy)
+{
+}
+
+graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,100,6,100,3)
 {
 }
 
@@ -51,6 +55,7 @@ bool graphCreator::create_graph(Object obj)
     //Ask to Grasp_DB the transitions grasps for obj/grasp
     //Fill internal maps with database data
 
+    int i=0;
     //Create nodes in each workspace for each grasp
     for ( auto grasp:database.Grasps )
     {
@@ -62,10 +67,12 @@ bool graphCreator::create_graph(Object obj)
             if(database.Reachability[eeId].count(workspace.first))
             {
                 SmartDigraph::Node n = graph.addNode();
+                ncolors[n]=eeId+1%3;
+                nshapes[n]=eeId%3;
                 grasps_ids[n] = grasp.first;
                 grasps_positions[n] = workspace.first;
-                coords[n].x=workspace.first*100+grasp.first*10;
-                coords[n].y=eeId*30-grasp.first*5;
+                coords[n].x=workspace.first*x+grasp.first*offx;
+                coords[n].y=eeId*y-grasp.first*offy;
                 nodeIds[grasp.first][workspace.first]=graph.id(n);
             }
         }
@@ -93,10 +100,12 @@ bool graphCreator::create_graph(Object obj)
             }
         }
     }
+    Palette p;
     
     lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
     coords ( coords ).
-//    nodeColors ( composeMap ( p,ncolors ) ).
+    nodeColors ( composeMap ( p,ncolors ) ).
+    nodeShapes(nshapes).
 //    arcColors ( composeMap ( p,acolors ) ).
     nodeTexts ( grasps_ids ).
     nodeTextSize ( 4 ).
@@ -106,7 +115,7 @@ bool graphCreator::create_graph(Object obj)
     arrowWidth ( 3 ).
     arrowLength ( 5 ).
 //     enableParallel ( true ).
-    enableParallel().parArcDist(1.5).
+//     enableParallel().parArcDist(1.5).
     distantColorNodeTexts().
     run();
    

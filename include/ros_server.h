@@ -26,6 +26,7 @@ class ros_server
 {
 public:
     ros_server();
+    ros_server(int x,int offx,int y,int offy);
     ~ros_server();
 private:
     ros::NodeHandle node;
