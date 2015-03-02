@@ -5,6 +5,8 @@
 #include <lemon/graph_to_eps.h>
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
+#include "ros/package.h"
+
 using namespace std;
 using namespace dual_manipulation::planner;
 
@@ -12,6 +14,8 @@ using namespace dual_manipulation::planner;
 graphCreator::graphCreator(lemon::SmartDigraph& graph, int x, int offx, int y, int offy)
 :graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy)
 {
+    std::string path=ros::package::getPath("dual_manipulation_planner");
+    img_path=path+"/image.eps";
 }
 
 graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,120,8,120,6)
@@ -101,8 +105,8 @@ bool graphCreator::create_graph(Object obj)
         }
     }
     Palette p;
-    
-    lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
+  
+    lemon::graphToEps<lemon::SmartDigraph> ( graph,img_path ).
     coords ( coords ).
     nodeColors ( composeMap ( p,ncolors ) ).
     nodeShapes(nshapes).
@@ -145,7 +149,7 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
         arccolors[i].set(1,0,0);
     }
     
-    lemon::graphToEps<lemon::SmartDigraph> ( graph,"image.eps" ).
+    lemon::graphToEps<lemon::SmartDigraph> ( graph,img_path ).
     coords ( coords ).
     nodeColors ( lemon::composeMap ( p,nlocalcolors ) ).
     nodeShapes(nshapes).

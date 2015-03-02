@@ -54,7 +54,7 @@ private:
     int x;int offx;int y;int offy;
     std::map<workspace_id,std::map<grasp_id,int>> nodeIds;
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
-
+    std::string img_path;
 };
 }
 }
