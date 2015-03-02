@@ -38,6 +38,7 @@ public:
     bool getNode(grasp_id graspId, workspace_id workspaceId,lemon::SmartDigraph::Node& node);
     
     void create_fake_map();
+    void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path);
     lemon::SmartDigraph::ArcMap<int> length; //TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_positions;//TODO make private

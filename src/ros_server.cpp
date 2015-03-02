@@ -53,6 +53,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
             temp.workspace_id=graph_creator.grasps_positions[i];
             res.path.push_back(temp);
             std::cout<<temp.grasp_id<<" "<<temp.workspace_id<<std::endl;
+            graph_creator.draw_path(computed_path);
         }
         res.ack=reached;
     }
