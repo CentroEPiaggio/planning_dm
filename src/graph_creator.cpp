@@ -161,6 +161,8 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
     drawArrows ( true ).
     arrowWidth ( 3 ).
     arrowLength ( 5 ).
+    preScale(false).
+    scale(20).
     arcColors(arccolors).
         enableParallel ( true ).
 //         enableParallel().parArcDist(1.5).
