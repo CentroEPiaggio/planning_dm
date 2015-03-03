@@ -6,16 +6,17 @@
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
 #include "ros/package.h"
-
+#include <dual_manipulation_shared/graph.h>
 using namespace std;
 using namespace dual_manipulation::planner;
 
 
 graphCreator::graphCreator(lemon::SmartDigraph& graph, int x, int offx, int y, int offy)
-:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy)
+:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy),grasps_texts(graph)
 {
     std::string path=ros::package::getPath("dual_manipulation_planner");
     img_path=path+"/image.eps";
+    graph_publisher=node.advertise<dual_manipulation_shared::graph>("computed_graph",1,this);
 }
 
 graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,120,8,120,6)
@@ -74,6 +75,7 @@ bool graphCreator::create_graph(Object obj)
                 ncolors[n]=eeId+1%3;
                 nshapes[n]=eeId%3;
                 grasps_ids[n] = grasp.first;
+                grasps_texts[n] = graph.id(n);
                 grasps_positions[n] = workspace.first;
                 coords[n].x=workspace.first*x+grasp.first*offx;
                 coords[n].y=eeId*y-grasp.first*offy;
@@ -112,6 +114,7 @@ bool graphCreator::create_graph(Object obj)
     nodeShapes(nshapes).
 //    arcColors ( composeMap ( p,acolors ) ).
     nodeTexts ( grasps_ids ).
+//     nodeTexts( grasps_texts).
     nodeTextSize ( 4 ).
     nodeScale ( 0.008 ).
     arcWidthScale ( 0.0008 ).
@@ -123,6 +126,22 @@ bool graphCreator::create_graph(Object obj)
     distantColorNodeTexts().
     run();
    
+    dual_manipulation_shared::graph message;
+    for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
+    {
+        message.node_id.push_back(graph.id(i));
+        message.x.push_back(coords[i].x);
+        message.y.push_back(coords[i].y);
+        message.text.push_back(std::to_string(grasps_ids[i]));
+//         message.text.push_back(std::to_string(graph.id(i)));
+        
+    }
+    for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
+    {
+        message.source.push_back(graph.id(graph.source(i)));
+        message.target.push_back(graph.id(graph.target(i)));
+    }
+    graph_publisher.publish(message);
 }
 
 
@@ -148,7 +167,7 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
     {
         arccolors[i].set(1,0,0);
     }
-    
+
     lemon::graphToEps<lemon::SmartDigraph> ( graph,img_path ).
     coords ( coords ).
     nodeColors ( lemon::composeMap ( p,nlocalcolors ) ).
@@ -168,6 +187,27 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
 //         enableParallel().parArcDist(1.5).
     distantColorNodeTexts().
     run();
+
+    dual_manipulation_shared::graph message;
+    for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
+    {
+        message.node_id.push_back(graph.id(i));
+        message.x.push_back(coords[i].x);
+        message.y.push_back(coords[i].y);
+        message.text.push_back(std::to_string(grasps_ids[i]));
+        //         message.text.push_back(std::to_string(graph.id(i)));
+        
+    }
+    for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
+    {
+        message.source.push_back(graph.id(graph.source(i)));
+        message.target.push_back(graph.id(graph.target(i)));
+    }
+    for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
+    {
+        message.path_node_ids.push_back(graph.id(i));
+    }
+    graph_publisher.publish(message);
     
 }
 

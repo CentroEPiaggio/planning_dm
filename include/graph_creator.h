@@ -9,6 +9,7 @@
 #include <dual_manipulation_shared/grasp.h>
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
+#include <ros/node_handle.h>
 
 namespace dual_manipulation
 {
@@ -41,6 +42,7 @@ public:
     void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path);
     lemon::SmartDigraph::ArcMap<int> length; //TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
+    lemon::SmartDigraph::NodeMap<int> grasps_texts;//TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_positions;//TODO make private
     lemon::SmartDigraph::NodeMap<int> ncolors;
     lemon::SmartDigraph::NodeMap<int> nshapes;
@@ -49,7 +51,8 @@ private:
     lemon::SmartDigraph& graph;
     unsigned int graph_node_size;
     databaseMapper database;
-    
+    ros::NodeHandle node;
+    ros::Publisher graph_publisher;
     lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
     int x;int offx;int y;int offy;
     std::map<workspace_id,std::map<grasp_id,int>> nodeIds;
