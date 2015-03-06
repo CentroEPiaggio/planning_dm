@@ -37,6 +37,7 @@ public:
     bool create_graph(Object obj);
     
     bool getNode(grasp_id graspId, workspace_id workspaceId,lemon::SmartDigraph::Node& node);
+    bool getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc);
     
     void create_fake_map();
     void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path);

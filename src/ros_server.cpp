@@ -1,5 +1,6 @@
 #include "ros_server.h"
 #include <graph_creator.h>
+#include <lemon/adaptors.h>
 #include <lemon/smart_graph.h>
 #include <lemon/dijkstra.h>
 #include <lemon/path.h>
@@ -43,9 +44,25 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
             std::cout<<"cannot find requested target grasp/workspace"<<std::endl;
             return false;
         }
+        lemon::SmartDigraph::ArcMap<bool> arc_filter(graph,true);
+        if (req.filtered_source_nodes.size()!=req.filtered_target_nodes.size())
+        {
+            std::cout<<"requested a filtering but source and target nodes vectors were not the same size!"<<std::endl;
+            return false;
+        }
+        for (int i=0;i<req.filtered_source_nodes.size();i++)
+        {
+            lemon::SmartDigraph::Arc to_be_filtered_arc;
+            if (graph_creator.getArc(req.filtered_source_nodes[i].grasp_id,req.filtered_source_nodes[i].workspace_id,
+                                     req.filtered_source_nodes[i].grasp_id,req.filtered_source_nodes[i].workspace_id,
+                                     to_be_filtered_arc))
+            {
+                arc_filter[to_be_filtered_arc]=false;
+            }
+        }
         lemon::Path<lemon::SmartDigraph> computed_path;
         int distance;
-        bool reached = lemon::dijkstra ( graph, graph_creator.length ).path ( computed_path ).dist ( distance ).run ( source, target );
+        bool reached = lemon::dijkstra (lemon::filterArcs<lemon::SmartDigraph>(graph, arc_filter), graph_creator.length ).path ( computed_path ).dist ( distance ).run ( source, target );
         for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
         {
             dual_manipulation_shared::planner_item temp;

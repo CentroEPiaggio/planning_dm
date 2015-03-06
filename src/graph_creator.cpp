@@ -47,6 +47,17 @@ bool graphCreator::getNode(grasp_id graspId, workspace_id workspaceId, lemon::Sm
     return true;
 }
 
+bool graphCreator::getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc)
+{
+    lemon::SmartDigraph::Node s_node,t_node;
+    if (!nodeIds.count(s_graspId) || !nodeIds[s_graspId].count(s_workspaceId)) return false;
+    s_node = graph.nodeFromId(nodeIds[s_graspId][s_workspaceId]);
+    if (!nodeIds.count(t_graspId) || !nodeIds[t_graspId].count(t_workspaceId)) return false;
+    t_node = graph.nodeFromId(nodeIds[t_graspId][t_workspaceId]);
+    lemon::findArc(graph,s_node,t_node,arc);
+    if (arc==lemon::INVALID) return false;
+    return true;
+}
 
 bool graphCreator::create_graph(Object obj)
 {
