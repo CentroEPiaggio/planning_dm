@@ -57,6 +57,8 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
                                      req.filtered_target_nodes[i].grasp_id,req.filtered_target_nodes[i].workspace_id,
                                      to_be_filtered_arc))
             {
+		std::cout << "Filtering arc between grasp:" << req.filtered_source_nodes[i].grasp_id << " in ws:" << req.filtered_source_nodes[i].workspace_id;
+		std::cout << " and grasp:" << req.filtered_target_nodes[i].grasp_id << " in ws:" << req.filtered_target_nodes[i].workspace_id << std::endl;
                 arc_filter[to_be_filtered_arc]=false;
             }
         }
