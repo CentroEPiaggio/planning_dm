@@ -54,7 +54,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         {
             lemon::SmartDigraph::Arc to_be_filtered_arc;
             if (graph_creator.getArc(req.filtered_source_nodes[i].grasp_id,req.filtered_source_nodes[i].workspace_id,
-                                     req.filtered_source_nodes[i].grasp_id,req.filtered_source_nodes[i].workspace_id,
+                                     req.filtered_target_nodes[i].grasp_id,req.filtered_target_nodes[i].workspace_id,
                                      to_be_filtered_arc))
             {
                 arc_filter[to_be_filtered_arc]=false;
@@ -70,8 +70,8 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
             temp.workspace_id=graph_creator.grasps_positions[i];
             res.path.push_back(temp);
             std::cout<<temp.grasp_id<<" "<<temp.workspace_id<<std::endl;
-            graph_creator.draw_path(computed_path);
         }
+        graph_creator.draw_path(computed_path);
         res.ack=reached;
     }
     return true;
