@@ -76,7 +76,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         graph_creator.draw_path(computed_path);
         res.ack=reached;
     }
-    return true;
+    return res.ack;
 }
 
 ros_server::~ros_server()

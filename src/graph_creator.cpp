@@ -54,7 +54,7 @@ bool graphCreator::getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_i
     s_node = graph.nodeFromId(nodeIds[s_graspId][s_workspaceId]);
     if (!nodeIds.count(t_graspId) || !nodeIds[t_graspId].count(t_workspaceId)) return false;
     t_node = graph.nodeFromId(nodeIds[t_graspId][t_workspaceId]);
-    lemon::findArc(graph,s_node,t_node,arc);
+    arc = lemon::findArc(graph,s_node,t_node);
     if (arc==lemon::INVALID) return false;
     return true;
 }
@@ -105,6 +105,7 @@ bool graphCreator::create_graph(Object obj)
                 database.WorkspacesAdjacency[grasps_positions[n]].count(grasps_positions[ntarget]))
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                length[a]=1;
                 a=graph.addArc ( ntarget,n );
                 length[a]=1;
             }
@@ -112,6 +113,7 @@ bool graphCreator::create_graph(Object obj)
             if (grasps_positions[n]==grasps_positions[ntarget] && database.Grasp_transitions[grasps_ids[n]].count(grasps_ids[ntarget])) 
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
+                length[a]=2;
                 a=graph.addArc ( ntarget,n );
                 length[a]=2;
             }
