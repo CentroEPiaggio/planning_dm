@@ -37,17 +37,20 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         if (!graph_creator.getNode(req.source.grasp_id,req.source.workspace_id,source))
         {
             std::cout<<"cannot find requested source grasp/workspace"<<std::endl;
+            res.status="cannot find requested source grasp/workspace";
             return false;
         }
         if (!graph_creator.getNode(req.destination.grasp_id,req.destination.workspace_id,target)) 
         {
             std::cout<<"cannot find requested target grasp/workspace"<<std::endl;
+            res.status="cannot find requested target grasp/workspace";
             return false;
         }
         lemon::SmartDigraph::ArcMap<bool> arc_filter(graph,true);
         if (req.filtered_source_nodes.size()!=req.filtered_target_nodes.size())
         {
             std::cout<<"requested a filtering but source and target nodes vectors were not the same size!"<<std::endl;
+            res.status="requested a filtering but source and target nodes vectors were not the same size!";
             return false;
         }
         for (int i=0;i<req.filtered_source_nodes.size();i++)
@@ -64,6 +67,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         }
         lemon::Path<lemon::SmartDigraph> computed_path;
         int distance;
+
         bool reached = lemon::dijkstra (lemon::filterArcs<lemon::SmartDigraph>(graph, arc_filter), graph_creator.length ).path ( computed_path ).dist ( distance ).run ( source, target );
         for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
         {
@@ -75,8 +79,12 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         }
         graph_creator.draw_path(computed_path);
         res.ack=reached;
+        if (reached)
+            res.status="path found";
+        else
+            res.status="could not find a valid path";
     }
-    return res.ack;
+    return true;
 }
 
 ros_server::~ros_server()
