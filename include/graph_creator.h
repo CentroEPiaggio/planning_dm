@@ -56,7 +56,8 @@ private:
     ros::Publisher graph_publisher;
     lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
     int x;int offx;int y;int offy;
-    std::map<workspace_id,std::map<grasp_id,int>> nodeIds;
+    std::map<grasp_id,std::map<workspace_id,int>> nodeIds;
+    std::map<endeffector_id, std::map<workspace_id, std::vector<std::pair<grasp_id, int>>>> graph_as_map;
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
     std::string img_path;
 };

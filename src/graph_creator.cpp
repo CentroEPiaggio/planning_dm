@@ -20,7 +20,7 @@ graphCreator::graphCreator(lemon::SmartDigraph& graph, int x, int offx, int y, i
     graph_publisher=node.advertise<dual_manipulation_shared::graph>("computed_graph",1,this);
 }
 
-graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,120,8,120,6)
+graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,300,8,300,6)
 {
 }
 
@@ -94,9 +94,35 @@ bool graphCreator::create_graph(Object obj)
                 grasps_ids[n] = grasp.first;
                 grasps_texts[n] = graph.id(n);
                 grasps_positions[n] = workspace.first;
-                coords[n].x=workspace.first*x+grasp.first*offx;
-                coords[n].y=eeId*y-grasp.first*offy;
+//                 coords[n].x=workspace.first*x+grasp.first*offx;
+//                 coords[n].y=eeId*y-grasp.first*offy;
                 nodeIds[grasp.first][workspace.first]=graph.id(n);
+                graph_as_map[eeId][workspace.first].push_back(make_pair(grasp.first,graph.id(n)));
+            }
+        }
+    }
+    int max_ee_id=0;
+    for (auto ee: database.EndEffectors)
+    {
+        if (ee.first>max_ee_id)
+            max_ee_id=ee.first;
+    }
+    auto x=2*this->x;
+    int offsetx = max_ee_id*x/4;
+    //Choose appropriate coordinates
+    for (auto ee: graph_as_map)
+    {
+        for (auto workspace: ee.second)
+        {
+            int num_grasps = workspace.second.size();
+            int i=0;
+            double spacex = double(x/2)/((num_grasps+2));
+            double spacey = double(y/2)/((num_grasps+2));
+            for (auto grasp: workspace.second)
+            {
+                coords[graph.nodeFromId(grasp.second)].x=offsetx+ workspace.first*x+pow(-1,ee.first)*ee.first*x/4+(num_grasps-i)*spacex;
+                coords[graph.nodeFromId(grasp.second)].y=(ee.first+1)*y-i*spacey;
+                i++;
             }
         }
     }
