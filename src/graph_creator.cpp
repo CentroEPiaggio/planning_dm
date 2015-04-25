@@ -7,6 +7,7 @@
 #include <dual_manipulation_shared/databasemapper.h>
 #include "ros/package.h"
 #include <dual_manipulation_shared/graph.h>
+#include <dual_manipulation_shared/stream_utils.h>
 using namespace std;
 using namespace dual_manipulation::planner;
 
@@ -50,11 +51,16 @@ bool graphCreator::getNode(grasp_id graspId, workspace_id workspaceId, lemon::Sm
 bool graphCreator::getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc)
 {
     lemon::SmartDigraph::Node s_node,t_node;
+//     lemon::SmartDigraph::Arc temp;
     if (!nodeIds.count(s_graspId) || !nodeIds[s_graspId].count(s_workspaceId)) return false;
     s_node = graph.nodeFromId(nodeIds[s_graspId][s_workspaceId]);
     if (!nodeIds.count(t_graspId) || !nodeIds[t_graspId].count(t_workspaceId)) return false;
     t_node = graph.nodeFromId(nodeIds[t_graspId][t_workspaceId]);
     arc = lemon::findArc(graph,s_node,t_node);
+//     if (graph.id(s_node)==45 && graph.id(t_node)==7) std::cout<<"22 - 3, 4 - 3 ->asfas 45 7"<<" "<<graph.id(temp);
+//     arc=temp,
+//     lemon::findArc(graph,s_node,t_node,temp);
+//     assert(temp==lemon::INVALID);
     if (arc==lemon::INVALID) return false;
     return true;
 }

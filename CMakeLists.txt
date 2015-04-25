@@ -38,4 +38,8 @@ add_executable(test_planning test/test_planning.cpp)
 add_dependencies(test_planning dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
 target_link_libraries(test_planning ${catkin_LIBRARIES})
 
+add_executable(single_grasp_test test/single_grasp_planning.cpp)
+add_dependencies(single_grasp_test dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared)
+target_link_libraries(single_grasp_test ${catkin_LIBRARIES})
+
 # add_dependencies(test_planning dual_manipulation_shared_gencpp)
