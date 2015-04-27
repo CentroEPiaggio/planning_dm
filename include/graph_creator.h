@@ -40,7 +40,7 @@ public:
     bool getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc);
     
     void create_fake_map();
-    void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path);
+    void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path, const lemon::SmartDigraph::ArcMap< bool >& arc_filter);
     lemon::SmartDigraph::ArcMap<int> length; //TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
     lemon::SmartDigraph::NodeMap<int> grasps_texts;//TODO make private

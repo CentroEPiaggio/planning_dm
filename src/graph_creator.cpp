@@ -1,5 +1,6 @@
 #include "graph_creator.h"
 
+#include <lemon/adaptors.h>
 #include <lemon/dijkstra.h>
 #include <lemon/concepts/maps.h>
 #include <lemon/graph_to_eps.h>
@@ -190,7 +191,7 @@ bool graphCreator::create_graph(Object obj)
 }
 
 
-void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path)
+void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path, const lemon::SmartDigraph::ArcMap< bool >& arc_filter)
 {
     using namespace lemon;
     SmartDigraph::NodeMap<int> nlocalcolors(graph);
@@ -245,6 +246,9 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
     }
     for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
     {
+	if(!arc_filter[i])
+	  continue;
+	
         message.source.push_back(graph.id(graph.source(i)));
         message.target.push_back(graph.id(graph.target(i)));
     }

@@ -77,7 +77,7 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
             res.path.push_back(temp);
             std::cout<<temp.grasp_id<<" "<<temp.workspace_id<<std::endl;
         }
-        graph_creator.draw_path(computed_path);
+        graph_creator.draw_path(computed_path,arc_filter);
         res.ack=reached;
         if (reached)
             res.status="path found";
