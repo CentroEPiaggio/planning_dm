@@ -70,6 +70,7 @@ bool graphCreator::create_graph(Object obj)
 {
     using namespace lemon;
     graph.clear();
+    graph_as_map.clear();
     //Ask to Grasp_DB the list of objects
     //Check if obj is in the list
     if (!database.Objects.count(obj.id))
