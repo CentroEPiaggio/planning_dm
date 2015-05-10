@@ -148,8 +148,6 @@ bool graphCreator::create_graph(Object obj)
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
                 length[a]=2;
-                a=graph.addArc ( ntarget,n );
-                length[a]=2;
             }
         }
     }
