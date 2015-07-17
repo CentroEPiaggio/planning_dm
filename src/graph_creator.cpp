@@ -13,33 +13,16 @@ using namespace std;
 using namespace dual_manipulation::planner;
 
 
-graphCreator::graphCreator(lemon::SmartDigraph& graph, int x, int offx, int y, int offy)
-:graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy),grasps_texts(graph)
+graphCreator::graphCreator(int x, int offx, int y, int offy)
+:public_graph(graph),grasps_ids(graph),grasps_positions(graph),coords(graph),length(graph),ncolors(graph),nshapes(graph),x(x),y(y),offx(offx),offy(offy),grasps_texts(graph)
 {
     std::string path=ros::package::getPath("dual_manipulation_planner");
     img_path=path+"/image.eps";
     graph_publisher=node.advertise<dual_manipulation_shared::graph>("computed_graph",1,this);
 }
 
-graphCreator::graphCreator(lemon::SmartDigraph& graph):graphCreator(graph,300,8,300,6)
+graphCreator::graphCreator():graphCreator(300,8,300,6)
 {
-}
-
-
-void graphCreator::create_fake_map()
-{
-/*    Grasp temp;
-    temp.name="test";
-    grasps[0]=temp;
-    temp.name="test1";
-    grasps[1]=temp;
-    temp.name="test2";
-    grasps[2]=temp;
-    transition_grasps[0].push_back(1);
-//     transition_grasps[0].push_back(2);
-//     transition_grasps[1].push_back(2);
-//     transition_grasps[2].push_back(0);
-    transition_grasps[2].push_back(1);*/
 }
 
 bool graphCreator::getNode(grasp_id graspId, workspace_id workspaceId, lemon::SmartDigraphBase::Node& node)
@@ -187,6 +170,12 @@ bool graphCreator::create_graph(Object obj)
         message.target.push_back(graph.id(graph.target(i)));
     }
     graph_publisher.publish(message);
+}
+
+bool graphCreator::find_path(const lemon::SmartDigraph::ArcMap< bool >& arc_filter, const lemon::SmartDigraph::Node& source, const lemon::SmartDigraph::Node& target, int& distance, lemon::Path< lemon::SmartDigraph >& computed_path)
+{
+    bool reached = lemon::dijkstra (lemon::filterArcs<lemon::SmartDigraph>(graph, arc_filter), length ).path ( computed_path ).dist ( distance ).run ( source, target );
+    return reached;
 }
 
 

@@ -21,13 +21,12 @@ namespace dual_manipulation
  */
 class graphCreator
 {
-    const std::vector<std::string> workspaces = {"left_workspace","right_workspace","shared_workspace"};
-    const std::string left_workspace="left_workspace";
-    const std::string right_workspace="right_workspace";
-    const std::string shared_workspace="shared_workspace";
+protected:
+    lemon::SmartDigraph graph;
+    
 public:
-    graphCreator(lemon::SmartDigraph& graph);
-    graphCreator(lemon::SmartDigraph& graph,int x,int offx,int y,int offy);
+    graphCreator();
+    graphCreator(int x,int offx,int y,int offy);
     /**
      * @brief Creates a graph of all the possible interactions between an object \param obj and the grasps
      * 
@@ -38,18 +37,26 @@ public:
     
     bool getNode(grasp_id graspId, workspace_id workspaceId,lemon::SmartDigraph::Node& node);
     bool getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc);
-    
-    void create_fake_map();
+
     void draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path, const lemon::SmartDigraph::ArcMap< bool >& arc_filter);
-    lemon::SmartDigraph::ArcMap<int> length; //TODO make private
-    lemon::SmartDigraph::NodeMap<int> grasps_ids;//TODO make private
-    lemon::SmartDigraph::NodeMap<int> grasps_texts;//TODO make private
-    lemon::SmartDigraph::NodeMap<int> grasps_positions;//TODO make private
+    const lemon::SmartDigraph & public_graph;
+
+    bool find_path(const lemon::SmartDigraph::ArcMap<bool>& arc_filter, const lemon::SmartDigraph::Node& source,
+                   const lemon::SmartDigraph::Node& target, int& distance, lemon::Path<lemon::SmartDigraph>& computed_path);
+    
+    inline void getNodeInfo(lemon::SmartDigraph::Node i, grasp_id& g_id, workspace_id& w_id)
+    {
+        g_id=grasps_ids[i];
+        w_id=grasps_positions[i];
+    }
+protected:
+    lemon::SmartDigraph::ArcMap<int> length;
+    lemon::SmartDigraph::NodeMap<int> grasps_ids;
+    lemon::SmartDigraph::NodeMap<int> grasps_texts;
+    lemon::SmartDigraph::NodeMap<int> grasps_positions;
     lemon::SmartDigraph::NodeMap<int> ncolors;
     lemon::SmartDigraph::NodeMap<int> nshapes;
-    
-private:
-    lemon::SmartDigraph& graph;
+protected:
     unsigned int graph_node_size;
     databaseMapper database;
     ros::NodeHandle node;
@@ -60,6 +67,8 @@ private:
     std::map<endeffector_id, std::map<workspace_id, std::vector<std::pair<grasp_id, int>>>> graph_as_map;
     //lemon::SmartDigraph::NodeMap<int> coord_x, coord_y; //Future grasps_positions???
     std::string img_path;
+    
+private:
 };
 }
 }

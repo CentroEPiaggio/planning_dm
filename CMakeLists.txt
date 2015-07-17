@@ -18,6 +18,7 @@ endif()
 find_package(catkin REQUIRED COMPONENTS roscpp dual_manipulation_shared)
 catkin_package(
 	INCLUDE_DIRS include
+	LIBRARIES planning_lib
 	DEPENDS dual_manipulation_shared
 )
 
@@ -32,14 +33,29 @@ add_dependencies(dual_manipulation_planner dual_manipulation_shared_generate_mes
 target_link_libraries(dual_manipulation_planner ${catkin_LIBRARIES} lemon)
 # add_dependencies(dual_manipulation_planner dual_manipulation_shared_gencpp)
 
+add_library(planning_lib SHARED src/graph_creator.cpp src/planner_lib.cpp)
+target_link_libraries(planning_lib ${catkin_LIBRARIES} lemon)
+add_dependencies(planning_lib dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
+install(TARGETS planning_lib
+         EXPORT planning_lib
+        ARCHIVE DESTINATION "${CATKIN_PACKAGE_BIN_DESTINATION}" COMPONENT lib
+#         RUNTIME DESTINATION "${CATKIN_PACKAGE_BIN_DESTINATION}" COMPONENT bin
+         LIBRARY DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}" COMPONENT shlib
+)
 install(TARGETS dual_manipulation_planner RUNTIME DESTINATION bin)
 
-add_executable(test_planning test/test_planning.cpp)
+add_executable(test_planning test/test_planning.cpp src/planner_lib.cpp src/graph_creator.cpp)
 add_dependencies(test_planning dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
 target_link_libraries(test_planning ${catkin_LIBRARIES})
 
 add_executable(single_grasp_test test/single_grasp_planning.cpp)
 add_dependencies(single_grasp_test dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared)
 target_link_libraries(single_grasp_test ${catkin_LIBRARIES})
+
 
 # add_dependencies(test_planning dual_manipulation_shared_gencpp)
