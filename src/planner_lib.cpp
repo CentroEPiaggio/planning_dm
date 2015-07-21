@@ -1,4 +1,4 @@
-#include "planner_lib.h"
+#include "dual_manipulation_planner/planner_lib.h"
 #include <lemon/adaptors.h>
 #include <lemon/dijkstra.h>
 #include <dual_manipulation_shared/planner_item.h>

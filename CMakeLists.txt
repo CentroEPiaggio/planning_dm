@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp dual_manipulation_shared)
 catkin_package(
 	INCLUDE_DIRS include
 	LIBRARIES planning_lib
-	DEPENDS dual_manipulation_shared
+	CATKIN_DEPENDS dual_manipulation_shared
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})

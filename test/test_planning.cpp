@@ -2,7 +2,7 @@
 #include <std_msgs/String.h>
 #include <iostream>
 #include "dual_manipulation_shared/planner_service.h"
-#include <planner_lib.h>
+#include <dual_manipulation_planner/planner_lib.h>
 
 int main(int argc, char **argv)
 {
