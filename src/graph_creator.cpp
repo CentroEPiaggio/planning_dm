@@ -18,7 +18,7 @@ graphCreator::graphCreator(int x, int offx, int y, int offy)
 {
     std::string path=ros::package::getPath("dual_manipulation_planner");
     img_path=path+"/image.eps";
-    graph_publisher=node.advertise<dual_manipulation_shared::graph>("computed_graph",1,this);
+    graph_publisher=node.advertise<dual_manipulation_shared::graph>("computed_graph",100,this);
 }
 
 graphCreator::graphCreator():graphCreator(300,8,300,6)
