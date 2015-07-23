@@ -182,45 +182,45 @@ bool graphCreator::find_path(const lemon::SmartDigraph::ArcMap< bool >& arc_filt
 void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_path, const lemon::SmartDigraph::ArcMap< bool >& arc_filter)
 {
     using namespace lemon;
-    SmartDigraph::NodeMap<int> nlocalcolors(graph);
-    lemon::SmartDigraph::ArcMap<lemon::Color> arccolors(graph);
-    lemon::Palette p;
-    for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
-    {
-        nlocalcolors[i]=ncolors[i];
-    }
-    for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
-    {
-        nlocalcolors[i]=5;
-    }
-    for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
-    {
-        arccolors[i].set(0,0,0);
-    }
-    for ( lemon::Path<lemon::SmartDigraph>::ArcIt i ( computed_path ); i != lemon::INVALID; ++i )
-    {
-        arccolors[i].set(1,0,0);
-    }
-
-    lemon::graphToEps<lemon::SmartDigraph> ( graph,img_path ).
-    coords ( coords ).
-    nodeColors ( lemon::composeMap ( p,nlocalcolors ) ).
-    nodeShapes(nshapes).
-    //    arcColors ( composeMap ( p,acolors ) ).
-    nodeTexts ( grasps_ids ).
-    nodeTextSize ( 4 ).
-    nodeScale ( 0.008 ).
-    arcWidthScale ( 0.0008 ).
-    drawArrows ( true ).
-    arrowWidth ( 3 ).
-    arrowLength ( 5 ).
-    preScale(false).
-    scale(20).
-    arcColors(arccolors).
-        enableParallel ( true ).
-//         enableParallel().parArcDist(1.5).
-    distantColorNodeTexts().
-    run();
+//     SmartDigraph::NodeMap<int> nlocalcolors(graph);
+//     lemon::SmartDigraph::ArcMap<lemon::Color> arccolors(graph);
+//     lemon::Palette p;
+//     for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
+//     {
+//         nlocalcolors[i]=ncolors[i];
+//     }
+//     for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
+//     {
+//         nlocalcolors[i]=5;
+//     }
+//     for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
+//     {
+//         arccolors[i].set(0,0,0);
+//     }
+//     for ( lemon::Path<lemon::SmartDigraph>::ArcIt i ( computed_path ); i != lemon::INVALID; ++i )
+//     {
+//         arccolors[i].set(1,0,0);
+//     }
+// 
+//     lemon::graphToEps<lemon::SmartDigraph> ( graph,img_path ).
+//     coords ( coords ).
+//     nodeColors ( lemon::composeMap ( p,nlocalcolors ) ).
+//     nodeShapes(nshapes).
+//     //    arcColors ( composeMap ( p,acolors ) ).
+//     nodeTexts ( grasps_ids ).
+//     nodeTextSize ( 4 ).
+//     nodeScale ( 0.008 ).
+//     arcWidthScale ( 0.0008 ).
+//     drawArrows ( true ).
+//     arrowWidth ( 3 ).
+//     arrowLength ( 5 ).
+//     preScale(false).
+//     scale(20).
+//     arcColors(arccolors).
+//         enableParallel ( true ).
+// //         enableParallel().parArcDist(1.5).
+//     distantColorNodeTexts().
+//     run();
 
     dual_manipulation_shared::graph message;
     for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
