@@ -26,8 +26,8 @@ void dual_manipulation::planner::planner_lib::add_filtered_arc(grasp_id source_g
         target_grasp_id,target_workspace_id,
         to_be_filtered_arc))
     {
-        std::cout << "Filtering arc between grasp:" << source_grasp_id << " in ws:" << source_workspace_id;
-        std::cout << " and grasp:" << target_grasp_id << " in ws:" << target_workspace_id << std::endl;
+//         std::cout << "Filtering arc between grasp:" << source_grasp_id << " in ws:" << source_workspace_id;
+//         std::cout << " and grasp:" << target_grasp_id << " in ws:" << target_workspace_id << std::endl;
         (*arc_filter)[to_be_filtered_arc]=false;
     }
 }
@@ -46,7 +46,7 @@ bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, wor
 {
     path.clear();
     ros::Time start = ros::Time::now();
-    std::cout<<"planning from "<<source_grasp_id<<" in workspace "<<source_workspace_id<<" to "<<target_grasp_id<<" in workspace "<<target_workspace_id<<std::endl;
+//     std::cout<<"planning from "<<source_grasp_id<<" in workspace "<<source_workspace_id<<" to "<<target_grasp_id<<" in workspace "<<target_workspace_id<<std::endl;
     lemon::SmartDigraph::Node source, target;
     if (!getNode(source_grasp_id,source_workspace_id,source))
     {
@@ -69,13 +69,15 @@ bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, wor
         temp.grasp_id=grasps_ids[i];
         temp.workspace_id=grasps_positions[i];
         path.push_back(temp);
-        std::cout<<temp.grasp_id<<" "<<temp.workspace_id<<std::endl;
+//         std::cout<<temp.grasp_id<<" "<<temp.workspace_id<<std::endl;
     }
     if (reached)
-        std::cout<<"path found"<<std::endl;
+    {
+//         std::cout<<"path found"<<std::endl;
+    }
     else
         std::cout<<"could not find a valid path"<<std::endl;
     ros::Time end = ros::Time::now();
-    std::cout<<(end-start).toSec()<<std::endl;
+//     std::cout<<(end-start).toSec()<<std::endl;
     return reached;
 }
