@@ -230,12 +230,15 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
         message.y.push_back(coords[i].y);
         message.text.push_back(std::to_string(grasps_ids[i]));
         //         message.text.push_back(std::to_string(graph.id(i)));
-        
     }
     for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
     {
 	if(!arc_filter[i])
-	  continue;
+    {
+        message.filtered_source.push_back(graph.id(graph.source(i)));
+        message.filtered_target.push_back(graph.id(graph.target(i)));
+        continue;
+    }
 	
         message.source.push_back(graph.id(graph.source(i)));
         message.target.push_back(graph.id(graph.target(i)));
@@ -245,7 +248,6 @@ void graphCreator::draw_path(const lemon::Path< lemon::SmartDigraph >& computed_
         message.path_node_ids.push_back(graph.id(i));
     }
     graph_publisher.publish(message);
-    
 }
 
 
