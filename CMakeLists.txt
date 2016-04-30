@@ -15,7 +15,7 @@ else()
 endif()
 
 
-find_package(catkin REQUIRED COMPONENTS roscpp roslib dual_manipulation_shared)
+find_package(catkin REQUIRED COMPONENTS roscpp roslib dual_manipulation_shared lemon_ros)
 catkin_package(
 	INCLUDE_DIRS include
 	LIBRARIES planning_lib
@@ -26,7 +26,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories(${CMAKE_INSTALL_PREFIX}/include) #this line is to find lemon include files!!
 link_directories(${catkin_LIBRARY_DIRS})
 
-add_subdirectory(src/gml2lgf)
+#add_subdirectory(src/gml2lgf)
 
 add_executable(dual_manipulation_planner src/graph_creator.cpp src/ros_server.cpp src/main.cpp)
 add_dependencies(dual_manipulation_planner dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
