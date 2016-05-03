@@ -5,6 +5,7 @@
 
 dual_manipulation::planner::planner_lib::planner_lib():graphCreator()
 {
+    
 }
 
 
@@ -17,6 +18,8 @@ void dual_manipulation::planner::planner_lib::clear_filtered_arcs()
 {
     for ( lemon::SmartDigraph::ArcIt i ( graph ); i != lemon::INVALID; ++i )
         (*arc_filter)[i]= true;
+    //TODO: Send a clear request to the multiobject planner
+    
 }
 
 void dual_manipulation::planner::planner_lib::add_filtered_arc(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id)
@@ -30,6 +33,7 @@ void dual_manipulation::planner::planner_lib::add_filtered_arc(grasp_id source_g
 //         std::cout << " and grasp:" << target_grasp_id << " in ws:" << target_workspace_id << std::endl;
         (*arc_filter)[to_be_filtered_arc]=false;
     }
+    //TODO: Send a filter request to the multiobject planner
 }
 
 bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::string name)
@@ -38,7 +42,31 @@ bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::stri
     obj.id=id;
     create_graph(obj);
     arc_filter = new lemon::SmartDigraph::ArcMap<bool>(graph,true);
+    //TODO: call a set_object service of the multiobject_planner? Or just let him handle the set on its own?
+    //TODO both way it should be blocking
     return true;
+}
+
+void dual_manipulation_planner::planner_lib::plan_callback()
+{
+    //TODO Set a variable to unlock the waiting of remote_plan
+}
+
+void dual_manipulation_planner::planner_lib::barrier_callback()
+{
+    //TODO Set a variable to unlock the waiting of barrier, also provide a true/false in that variable
+}
+
+
+bool dual_manipulation_planner::planner_lib::remote_plan()
+{
+    //TODO Send a plan request to the multiobject planner
+    //TODO Wait for a plan response by sleeping and checking a variable set in a callback
+}
+
+bool dual_manipulation_planner::planner_lib::barrier()
+{
+    //TODO Send a message to wait for a synchronization, block until a "go" or a "replan" arrive on barrier_callback
 }
 
 
