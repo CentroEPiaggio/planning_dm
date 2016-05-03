@@ -1,5 +1,5 @@
 #include "ros_server.h"
-#include <graph_creator.h>
+#include <dual_manipulation_planner/graph_creator.h>
 #include <lemon/adaptors.h>
 #include <lemon/smart_graph.h>
 #include <lemon/dijkstra.h>

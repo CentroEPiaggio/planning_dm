@@ -30,13 +30,14 @@ public:
     bool plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector< dual_manipulation_shared::planner_item >& path);
 
     void draw_path();
+    ~planner_lib(){}
 
 private:
 
     lemon::SmartDigraph::ArcMap<bool>* arc_filter;
     Object obj;
     lemon::Path<lemon::SmartDigraph> computed_path;
-    lemon::SmartDigraph real_graph;
+//     lemon::SmartDigraph real_graph;
 
 };
 

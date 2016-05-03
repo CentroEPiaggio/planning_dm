@@ -44,7 +44,7 @@ public:
     bool find_path(const lemon::SmartDigraph::ArcMap<bool>& arc_filter, const lemon::SmartDigraph::Node& source,
                    const lemon::SmartDigraph::Node& target, int& distance, lemon::Path<lemon::SmartDigraph>& computed_path);
     
-    inline void getNodeInfo(lemon::SmartDigraph::Node i, grasp_id& g_id, workspace_id& w_id)
+    inline void getNodeInfo(lemon::SmartDigraph::Node i, grasp_id& g_id, workspace_id& w_id) const
     {
         g_id=grasps_ids[i];
         w_id=grasps_positions[i];

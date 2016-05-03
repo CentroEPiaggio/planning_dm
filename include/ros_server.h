@@ -3,7 +3,7 @@
 
 #include <ros/ros.h>
 #include <lemon/smart_graph.h>
-#include "graph_creator.h"
+#include "dual_manipulation_planner/graph_creator.h"
 #include "dual_manipulation_shared/planner_service.h"
 
 /**
