@@ -154,7 +154,6 @@ bool graphCreator::create_graph(Object obj)
     distantColorNodeTexts().
     run();
    
-    dual_manipulation_shared::graph message;
     for (lemon::SmartDigraph::NodeIt i(graph); i!=lemon::INVALID; ++i)
     {
         message.node_id.push_back(graph.id(i));

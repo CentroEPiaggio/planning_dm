@@ -4,13 +4,16 @@
 #include <dual_manipulation_shared/planner_item.h>
 #include <dual_manipulation_shared/planner_serviceResponse.h>
 #include <dual_manipulation_shared/planner_serviceRequest.h>
+#include <dual_manipulation_shared/planner_service_request.h>
+#include <dual_manipulation_shared/planner_service_response.h>
+#include <std_msgs/String.h>
 
 dual_manipulation::planner::planner_lib::planner_lib():graphCreator()
 {
     multiplan_barrier_pub = nh.advertise<std_msgs::Header>("/barrier_request",1);
-    multiplan_barrier_sub = nh.subscribe<std_msgs::Header>("/barrier_result",1,&dual_manipulation::planner::planner_lib::barrier_callback,this);
-    plan_request_pub = nh.advertise<dual_manipulation_shared::planner_serviceRequest>("/requestplan",1);
-    plan_sub = nh.subscribe<dual_manipulation_shared::planner_serviceResponse>("/remoteplan",1,&dual_manipulation::planner::planner_lib::plan_callback,this);
+    multiplan_barrier_sub = nh.subscribe<std_msgs::Header>("/barrier_result",5,&dual_manipulation::planner::planner_lib::barrier_callback,this);
+    plan_request_pub = nh.advertise<dual_manipulation_shared::planner_service_request>("/requestplan",1);
+    plan_sub = nh.subscribe<dual_manipulation_shared::planner_service_response>("/remoteplan",1,&dual_manipulation::planner::planner_lib::plan_callback,this);
 }
 
 
@@ -51,6 +54,7 @@ bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::stri
 {
     std::cout<<"object set to "<<id<<" with name "<<name<<std::endl;
     obj.id=id;
+    this->name=name;
     create_graph(obj);
     arc_filter = new lemon::SmartDigraph::ArcMap<bool>(graph,true);
     this->priority=priority;
@@ -60,21 +64,26 @@ bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::stri
 void dual_manipulation::planner::planner_lib::barrier_callback(const std_msgs::HeaderConstPtr& msg)
 {
     //Set a variable to unlock the waiting of barrier, also provide a true/false in that variable
-    barrier_received=true;
+    std::cout<<"barrier callback "<<*msg<<std::endl;
+    if (barrier_received) return;
     barrier_ok=msg->seq;
+    barrier_received=true;
 }
 
-void dual_manipulation::planner::planner_lib::plan_callback(const dual_manipulation_shared::planner_serviceResponseConstPtr& msg)
+void dual_manipulation::planner::planner_lib::plan_callback(const dual_manipulation_shared::planner_service_responseConstPtr& msg)
 {
     //TODO Set a variable to unlock the waiting of remote_plan
-    plan_received=true;
+    std::cout<<"plan received "<<msg<<std::endl;
+    if (msg->priority!=priority) return;
     last_plan_received=msg->path;
+    plan_received=true;
     if (msg->status=="failed") ROS_ERROR("Semantic plan failed, this should not happen unless the desired configuration is unreachable, check the grasps capabilities");
 }
 
 
 bool dual_manipulation::planner::planner_lib::remote_plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector<dual_manipulation_shared::planner_item> & path)
 {
+    plan_received=false;
     lemon::SmartDigraph::Node source, target;
     if (!getNode(source_grasp_id,source_workspace_id,source))
     {
@@ -88,7 +97,7 @@ bool dual_manipulation::planner::planner_lib::remote_plan(grasp_id source_grasp_
     }
     //Send a plan request to the multiobject planner
     
-    dual_manipulation_shared::planner_serviceRequest msg;
+    dual_manipulation_shared::planner_service_request msg;
     msg.command="plan";
     msg.source.grasp_id=source_grasp_id;
     msg.source.workspace_id=source_workspace_id;
@@ -98,14 +107,19 @@ bool dual_manipulation::planner::planner_lib::remote_plan(grasp_id source_grasp_
     msg.filtered_target_nodes=filtered_arcs.filtered_target_nodes;
     msg.object_id=obj.id;
     msg.priority=priority;
+    msg.time=ros::Time::now().toSec();
+    std::cout<< __func__ <<std::endl;
     //TODO filtered arcs?
-    plan_request_pub.publish(msg);
     
+    plan_request_pub.publish(msg);
+    //sleep(1);
+        
     //Wait for a plan response by sleeping and checking a variable set in a callback
     while(ros::ok())
     {
         ros::spinOnce();
         usleep(10000);
+        
         if (plan_received)
         {
             break;
@@ -122,8 +136,10 @@ bool dual_manipulation::planner::planner_lib::barrier()
     
     //Send a message to wait for a synchronization, block until a "go" or a "replan" arrive on barrier_callback
     std_msgs::Header msg;
+    msg.frame_id=name;
+    msg.stamp=ros::Time::now();
     msg.seq=priority;
-    multiplan_barrier_pub.publish(msg);
+    multiplan_barrier_pub.publish(msg);    
     while(ros::ok())
     {
         ros::spinOnce();
