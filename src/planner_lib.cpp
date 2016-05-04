@@ -64,7 +64,7 @@ bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::stri
 void dual_manipulation::planner::planner_lib::barrier_callback(const std_msgs::HeaderConstPtr& msg)
 {
     //Set a variable to unlock the waiting of barrier, also provide a true/false in that variable
-    std::cout<<"barrier callback "<<*msg<<std::endl;
+//     std::cout<<"barrier callback "<<*msg<<std::endl;
     if (barrier_received) return;
     barrier_ok=msg->seq;
     barrier_received=true;
@@ -73,7 +73,7 @@ void dual_manipulation::planner::planner_lib::barrier_callback(const std_msgs::H
 void dual_manipulation::planner::planner_lib::plan_callback(const dual_manipulation_shared::planner_service_responseConstPtr& msg)
 {
     //TODO Set a variable to unlock the waiting of remote_plan
-    std::cout<<"plan received "<<msg<<std::endl;
+//     std::cout<<"plan received "<<msg<<std::endl;
     if (msg->priority!=priority) return;
     last_plan_received=msg->path;
     plan_received=true;
