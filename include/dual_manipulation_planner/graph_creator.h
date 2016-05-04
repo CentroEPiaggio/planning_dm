@@ -9,6 +9,7 @@
 #include <dual_manipulation_shared/grasp.h>
 #include <dual_manipulation_shared/object.h>
 #include <dual_manipulation_shared/databasemapper.h>
+#include <dual_manipulation_shared/graph.h>
 #include <ros/node_handle.h>
 
 namespace dual_manipulation
@@ -34,6 +35,8 @@ public:
      * @return true on success, false otherwise
      */
     bool create_graph(Object obj);
+    dual_manipulation_shared::graph message;
+    ros::Publisher graph_publisher;
     
     bool getNode(grasp_id graspId, workspace_id workspaceId,lemon::SmartDigraph::Node& node);
     bool getArc(grasp_id s_graspId, workspace_id s_workspaceId,grasp_id t_graspId, workspace_id t_workspaceId, lemon::SmartDigraphBase::Arc& arc);
@@ -60,7 +63,6 @@ protected:
     unsigned int graph_node_size;
     databaseMapper database;
     ros::NodeHandle node;
-    ros::Publisher graph_publisher;
     lemon::SmartDigraph::NodeMap<lemon::dim2::Point<int>> coords;
     int x;int offx;int y;int offy;
     std::map<grasp_id,std::map<workspace_id,int>> nodeIds;
