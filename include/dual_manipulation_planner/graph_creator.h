@@ -49,6 +49,12 @@ public:
         g_id=grasps_ids[i];
         w_id=grasps_positions[i];
     }
+    
+    inline bool isEndEffectorMovable(endeffector_id ee_id)
+    {
+        return std::get<1>(database.EndEffectors.at(ee_id));
+    }
+    
 protected:
     lemon::SmartDigraph::ArcMap<int> length;
     lemon::SmartDigraph::NodeMap<int> grasps_ids;
