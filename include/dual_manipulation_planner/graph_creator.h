@@ -50,7 +50,7 @@ public:
         w_id=grasps_positions[i];
     }
     
-    inline bool isEndEffectorMovable(endeffector_id ee_id)
+    inline bool isEndEffectorMovable(endeffector_id ee_id) const
     {
         return std::get<1>(database.EndEffectors.at(ee_id));
     }
