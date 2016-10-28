@@ -117,20 +117,13 @@ bool graphCreator::create_graph(Object obj)
     {
         for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) //for all the targets
         {
-            if (grasps_ids[n]==grasps_ids[ntarget] && 
-                std::get<1>(database.EndEffectors[std::get<1>(database.Grasps[grasps_ids[n]])]) && //E.E is movable
-                database.WorkspacesAdjacency[grasps_positions[n]].count(grasps_positions[ntarget]))
+            transition_info t_info;
+            // constraint id: NOT used at now
+            constraint_id c_id(-1);
+            if(database.getTransitionInfo(object_state(grasps_ids[n],grasps_positions[n],c_id),object_state(grasps_ids[ntarget],grasps_positions[ntarget],c_id),t_info))
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
-                length[a]=1;
-                a=graph.addArc ( ntarget,n );
-                length[a]=1;
-            }
-            else
-            if (grasps_positions[n]==grasps_positions[ntarget] && database.Grasp_transitions[grasps_ids[n]].count(grasps_ids[ntarget])) 
-            {
-                SmartDigraph::Arc a=graph.addArc ( n,ntarget );
-                length[a]=2;
+                length[a] = t_info.transition_cost_;
             }
         }
     }
