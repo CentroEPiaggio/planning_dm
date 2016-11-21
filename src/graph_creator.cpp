@@ -118,9 +118,7 @@ bool graphCreator::create_graph(Object obj)
         for (SmartDigraph::NodeIt ntarget(graph); ntarget!=INVALID; ++ntarget) //for all the targets
         {
             transition_info t_info;
-            // constraint id: NOT used at now
-            constraint_id c_id(-1);
-            if(database.getTransitionInfo(object_state(grasps_ids[n],grasps_positions[n],c_id),object_state(grasps_ids[ntarget],grasps_positions[ntarget],c_id),t_info))
+            if(database.getTransitionInfo(object_state(grasps_ids[n],grasps_positions[n]),object_state(grasps_ids[ntarget],grasps_positions[ntarget]),t_info))
             {
                 SmartDigraph::Arc a=graph.addArc ( n,ntarget );
                 length[a] = t_info.transition_cost_;
