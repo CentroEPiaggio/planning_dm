@@ -3,6 +3,8 @@
 #include <lemon/dijkstra.h>
 #include <dual_manipulation_shared/planner_item.h>
 
+#define CLASS_NAMESPACE "planner_lib::"
+
 dual_manipulation::planner::planner_lib::planner_lib():graphCreator()
 {
 }
@@ -34,7 +36,7 @@ void dual_manipulation::planner::planner_lib::add_filtered_arc(grasp_id source_g
 
 bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::string name)
 {
-    std::cout<<"object set to "<<id<<" with name "<<name<<std::endl;
+    std::cout << CLASS_NAMESPACE << __func__ << " : object set to " << id << " with name " << name << std::endl;
     obj.id=id;
     create_graph(obj);
     arc_filter = new lemon::SmartDigraph::ArcMap<bool>(graph,true);
