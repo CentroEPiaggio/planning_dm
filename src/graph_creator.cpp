@@ -71,7 +71,7 @@ bool graphCreator::create_graph(Object obj)
         {
             endeffector_id eeId = grasp.second.ee_id;
             //if ee associated to grasp is reachable in the workspace
-            if(database.Reachability[eeId].count(workspace.first))
+            if(database.Reachability.count(eeId) && database.Reachability.at(eeId).count(workspace.first))
             {
                 SmartDigraph::Node n = graph.addNode();
                 ncolors[n]=eeId+1%3;
