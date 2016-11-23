@@ -52,7 +52,7 @@ public:
     
     inline bool isEndEffectorMovable(endeffector_id ee_id) const
     {
-        return std::get<1>(database.EndEffectors.at(ee_id));
+        return database.EndEffectors.at(ee_id).movable;
     }
     
 protected:

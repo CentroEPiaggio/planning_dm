@@ -66,10 +66,10 @@ bool graphCreator::create_graph(Object obj)
     //Create nodes in each workspace for each grasp
     for ( auto grasp:database.Grasps )
     {
-        if (std::get<0>(grasp.second)!=obj.id) continue;
+        if (grasp.second.obj_id!=obj.id) continue;
         for (auto workspace:database.Workspaces)
         {
-            endeffector_id eeId= std::get<1>(grasp.second);
+            endeffector_id eeId = grasp.second.ee_id;
             //if ee associated to grasp is reachable in the workspace
             if(database.Reachability[eeId].count(workspace.first))
             {
