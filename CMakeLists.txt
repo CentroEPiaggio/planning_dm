@@ -29,13 +29,10 @@ link_directories(${catkin_LIBRARY_DIRS})
 #add_subdirectory(src/gml2lgf)
 
 add_executable(dual_manipulation_planner src/graph_creator.cpp src/ros_server.cpp src/main.cpp)
-add_dependencies(dual_manipulation_planner dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
 target_link_libraries(dual_manipulation_planner ${catkin_LIBRARIES} lemon)
-# add_dependencies(dual_manipulation_planner dual_manipulation_shared_gencpp)
 
 add_library(planning_lib SHARED src/graph_creator.cpp src/planner_lib.cpp)
 target_link_libraries(planning_lib ${catkin_LIBRARIES} lemon)
-add_dependencies(planning_lib dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
 
 install(DIRECTORY include/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
@@ -50,12 +47,7 @@ install(TARGETS planning_lib
 install(TARGETS dual_manipulation_planner RUNTIME DESTINATION bin)
 
 add_executable(test_planning test/test_planning.cpp src/planner_lib.cpp src/graph_creator.cpp)
-add_dependencies(test_planning dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared lemon)
 target_link_libraries(test_planning ${catkin_LIBRARIES})
 
 add_executable(single_grasp_test test/single_grasp_planning.cpp)
-add_dependencies(single_grasp_test dual_manipulation_shared_generate_messages_cpp dual_manipulation_shared)
 target_link_libraries(single_grasp_test ${catkin_LIBRARIES})
-
-
-# add_dependencies(test_planning dual_manipulation_shared_gencpp)
