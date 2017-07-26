@@ -72,6 +72,21 @@ bool ros_server::planner_ros_service(dual_manipulation_shared::planner_service::
         bool reached = graph_creator.find_path(arc_filter,source,target,distance,computed_path);
         ros::Time after = ros::Time::now();
         std::cout<<(after-before).toSec()<<std::endl;
+        // Checking if number of edges in path is zero. If so, creating an edge with same departing and arriving nodes.
+        std::cout<<"Dijkstra computed a path long "<< computed_path.length() << " edges."<<std::endl;
+        if(computed_path.length()==0 && req.source.workspace_id==req.destination.workspace_id && req.source.grasp_id==req.destination.grasp_id)
+        {
+            lemon::SmartDigraph::Arc temp_arc;
+            if(graph_creator.getArc(req.source.grasp_id, req.source.workspace_id, req.destination.grasp_id, req.destination.workspace_id, temp_arc))
+            {
+                temp_arc = findArc(graph_creator.public_graph, source, target);
+                computed_path.addFront(temp_arc);
+            }
+            else
+            {
+                res.status="could not find a valid path";
+            }
+        }
         for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph_creator.public_graph, computed_path ); i != lemon::INVALID; ++i )
         {
             dual_manipulation_shared::planner_item temp;
