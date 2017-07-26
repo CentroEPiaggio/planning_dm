@@ -36,6 +36,7 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
+
 #ifndef DUAL_MANIPULATION_PLANNER_LIB
 #define DUAL_MANIPULATION_PLANNER_LIB
 #include "graph_creator.h"
@@ -65,7 +66,7 @@ public:
     void add_filtered_arc(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id);
 
 
-    bool plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector< dual_manipulation_shared::planner_item >& path);
+    bool plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector< dual_manipulation_shared::planner_item >& path, bool bad_checksinglegrasp = false);
 
     void draw_path();
     ~planner_lib(){}
