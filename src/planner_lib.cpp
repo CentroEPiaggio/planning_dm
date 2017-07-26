@@ -65,6 +65,22 @@ bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, wor
     bool reached = lemon::dijkstra (lemon::filterArcs<lemon::SmartDigraph>(graph, *arc_filter), length ).path ( computed_path ).dist ( distance ).run ( source, target );
     ros::Time after = ros::Time::now();
     std::cout<<(after-before).toSec()<<std::endl;
+    // Checking if number of edges in path is zero. If so, creating an edge with same departing and arriving nodes.
+    std::cout<<"Dijkstra computed a path long "<< computed_path.length() << " edges."<<std::endl;
+    if(computed_path.length()==0 && !bad_checksinglegrasp && source_workspace_id==target_workspace_id && source_grasp_id==target_grasp_id)
+    {
+        lemon::SmartDigraph::Arc temp_arc;
+        if(getArc(source_grasp_id, source_workspace_id, target_grasp_id, target_workspace_id, temp_arc))
+        {
+            temp_arc = findArc(graph, source, target);
+            computed_path.addFront(temp_arc);
+        }
+        else
+        {
+            std::cout<<"could not find a valid path"<<std::endl;
+            return false;
+        }
+    }
     for ( lemon::PathNodeIt<lemon::Path<lemon::SmartDigraph> > i ( graph, computed_path ); i != lemon::INVALID; ++i )
     {
         dual_manipulation_shared::planner_item temp;
