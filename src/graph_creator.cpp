@@ -105,7 +105,7 @@ bool graphCreator::create_graph(Object obj)
             double spacey = double(y/2)/((num_grasps+2));
             for (auto grasp: workspace.second)
             {
-                coords[graph.nodeFromId(grasp.second)].x=offsetx+ workspace.first*x+pow(-1,ee.first)*ee.first*x/4+(num_grasps-i)*spacex;
+                coords[graph.nodeFromId(grasp.second)].x=offsetx+ workspace.first*x+pow(-0.40,ee.first)*ee.first*x/4+(num_grasps-i)*spacex;
                 coords[graph.nodeFromId(grasp.second)].y=(ee.first+1)*y-i*spacey;
                 i++;
             }
