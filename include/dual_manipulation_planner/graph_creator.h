@@ -36,6 +36,7 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
+
 #ifndef GRAPH_CREATOR_H
 #define GRAPH_CREATOR_H
 
