@@ -44,7 +44,7 @@ bool dual_manipulation::planner::planner_lib::set_object(object_id id, std::stri
 }
 
 
-bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector<dual_manipulation_shared::planner_item> & path)
+bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, workspace_id source_workspace_id, grasp_id target_grasp_id, workspace_id target_workspace_id, std::vector<dual_manipulation_shared::planner_item> & path, bool bad_checksinglegrasp)
 {
     path.clear();
     ros::Time start = ros::Time::now();
