@@ -165,7 +165,12 @@ bool graphCreator::create_graph(Object obj)
 
 bool graphCreator::find_path(const lemon::SmartDigraph::ArcMap< bool >& arc_filter, const lemon::SmartDigraph::Node& source, const lemon::SmartDigraph::Node& target, int& distance, lemon::Path< lemon::SmartDigraph >& computed_path)
 {
+    ros::Time plan_start_time = ros::Time::now();
     bool reached = lemon::dijkstra (lemon::filterArcs<lemon::SmartDigraph>(graph, arc_filter), length ).path ( computed_path ).dist ( distance ).run ( source, target );
+    ros::Time plan_final_time = ros::Time::now();
+
+    std::cout << "THE SEMANTIC PLANNING TOOK: " << plan_final_time.toSec() - plan_start_time.toSec() << "SECONDS!!!" << std::endl;
+
     return reached;
 }
 

@@ -96,6 +96,8 @@ bool dual_manipulation::planner::planner_lib::plan(grasp_id source_grasp_id, wor
     else
         std::cout<<"could not find a valid path"<<std::endl;
     ros::Time end = ros::Time::now();
+    std::cout << "THE SEMANTIC PLANNING TOOK: " << (end-start).toSec() << "SECONDS!!!" << std::endl;
+
 //     std::cout<<(end-start).toSec()<<std::endl;
     return reached;
 }
